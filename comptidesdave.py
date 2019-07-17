@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+import this
 from obspy.core import read, UTCDateTime, Stream
 from obspy.clients.fdsn.client import Client
 from obspy.signal.polarization import particle_motion_odr
