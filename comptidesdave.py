@@ -20,7 +20,7 @@ chans = '00'
 presloc='30'
 net = "IU"
 stime= UTCDateTime('2019-121T00:00:00.0')
-etime= stime + 30.*24.*60.*60.
+etime= stime + 3.*24.*60.*60.
 
 client=Client()
 inv = client.get_stations(network="IU", station=sta, starttime=stime, endtime=etime, channel="LH*", level='response')
@@ -31,14 +31,14 @@ if debug:
 ctime = stime
 st = Stream()
 st = Stream()
-while ctime <= etime:
-    string = '/tr1/telemetry_days/IU_' + sta + '/' + str(ctime.year) + '/' + \
-                str(ctime.year) + '_' + str(ctime.julday).zfill(3) + '/*'
-    st += read(string + chans + '_LH*')
-    st += read(string + presloc + '_LDO*')
-    ctime += 24.*60.*60.
-#st += client.get_waveforms(net, sta, "00","LH*", stime, etime)
-#st += client.get_waveforms(net, sta, "30","LDO", stime, etime)
+#while ctime <= etime:
+#    string = '/tr1/telemetry_days/IU_' + sta + '/' + str(ctime.year) + '/' + \
+#                str(ctime.year) + '_' + str(ctime.julday).zfill(3) + '/*'
+#    st += read(string + chans + '_LH*')
+#    st += read(string + presloc + '_LDO*')
+#    ctime += 24.*60.*60.
+st += client.get_waveforms(net, sta, "00","LH*", stime, etime)
+st += client.get_waveforms(net, sta, "30","LDO", stime, etime)
 st.detrend('constant')
 st.merge(fill_value=0)
 st.decimate(5)
@@ -69,8 +69,8 @@ for idx, chan in enumerate(['LHZ', 'LHN','LHE']):
         ax1.plot(t, tr.data*10**9, label=tr.stats.location)
     ax1.text(1., .9*max(tr.data*10**9), chan)
     ax2 = ax1.twinx()
-    ax2.plot(t, st.select(channel="LDO")[0].data,label='LDO',c='C4', alpha=.5)
-    ax2.plot(t, np.imag(hilbert(st.select(channel="LDO")[0].data)),label='Hilbert LDO',c='C5', alpha=.5)
+    ax2.plot(t, st.select(channel="LDO")[0].data,label='LDO',color='g', alpha=.5)
+    ax2.plot(t, np.imag(hilbert(st.select(channel="LDO")[0].data)),label='Hilbert LDO',color='b', alpha=.5)
     ax2.set_ylabel('Pressure')
 
     if idx == 0:
@@ -87,7 +87,7 @@ labels += labels2
 ax = plt.gca()
 fig.legend(handles, labels, loc = 'lower center', ncol = 5, fontsize = 17)
 plt.xlabel('Time (days)')  
-plt.show()
+#plt.show()
 plt.savefig(sta + '_' + str(stime.year) + '_' + str(stime.julday).zfill(3) + '.pdf', format='PDF',dpi=400)
 
             
