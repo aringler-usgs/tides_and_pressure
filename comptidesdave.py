@@ -30,15 +30,16 @@ if debug:
 
 ctime = stime
 st = Stream()
-st = Stream()
+
 #while ctime <= etime:
 #    string = '/tr1/telemetry_days/IU_' + sta + '/' + str(ctime.year) + '/' + \
 #                str(ctime.year) + '_' + str(ctime.julday).zfill(3) + '/*'
 #    st += read(string + chans + '_LH*')
 #    st += read(string + presloc + '_LDO*')
 #    ctime += 24.*60.*60.
-st += client.get_waveforms(net, sta, "00","LH*", stime, etime)
-st += client.get_waveforms(net, sta, "30","LDO", stime, etime)
+st = read('cordata')
+#st += client.get_waveforms(net, sta, "00","LH*", stime, etime)
+#st += client.get_waveforms(net, sta, "30","LDO", stime, etime)
 st.detrend('constant')
 st.merge(fill_value=0)
 st.decimate(5)
